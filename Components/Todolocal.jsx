@@ -257,27 +257,30 @@ export default function LocalStorage() {
   });
 
   const [data, setData] = useState(() => {
-    const savedData = JSON.parse(localStorage.getItem("data"));
+    const savedData = JSON.parse(localStorage.getItem("localStorageData"));
     return savedData || [];
   });
 
   const [editIndex, setEditIndex] = useState(null);
 
   useEffect(() => {
-    localStorage.setItem("data", JSON.stringify(data));
+    localStorage.setItem("localStorageData", JSON.stringify(data));
   }, [data]);
 
   function submitForm(e) {
     e.preventDefault();
 
+    if (state.name.trim() === "" || state.email.trim() === "") {
+      alert("Please fill all fields");
+      return;
+    }
+
     if (editIndex !== null) {
-      // Edit
       const updatedData = [...data];
       updatedData[editIndex] = state;
       setData(updatedData);
       setEditIndex(null);
     } else {
-      // Add
       setData([...data, state]);
     }
 
@@ -294,9 +297,213 @@ export default function LocalStorage() {
     setData(filteredData);
   }
 
+  function handleClearAll() {
+    if (window.confirm("Are you sure you want to clear all data?")) {
+      setData([]);
+      localStorage.removeItem("localStorageData");
+    }
+  }
+
   return (
-    <div>
-      <h1>LocalStorage</h1>
+    <div className="storage-container">
+      <style>{`
+        .storage-container {
+          max-width: 800px;
+          margin: 0 auto;
+          padding: 30px 20px;
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+            'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+            sans-serif;
+          background: #f5f5f5;
+          min-height: 100vh;
+        }
+
+        .storage-container h1 {
+          text-align: center;
+          color: #2c3e50;
+          margin-bottom: 10px;
+          font-size: 2em;
+          font-weight: 600;
+        }
+
+        .storage-info {
+          text-align: center;
+          color: #27ae60;
+          margin-bottom: 30px;
+          padding: 10px;
+          background: #d5f4e6;
+          border-radius: 8px;
+          font-size: 14px;
+        }
+
+        .storage-container form {
+          background: white;
+          padding: 30px;
+          border-radius: 12px;
+          box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+          margin-bottom: 30px;
+        }
+
+        .storage-container label {
+          display: block;
+          margin-bottom: 8px;
+          color: #333;
+          font-weight: 600;
+          font-size: 14px;
+        }
+
+        .storage-container input {
+          width: 100%;
+          padding: 12px 15px;
+          border: 2px solid #e0e0e0;
+          border-radius: 8px;
+          font-size: 16px;
+          font-family: inherit;
+          transition: all 0.3s ease;
+          box-sizing: border-box;
+          margin-bottom: 20px;
+        }
+
+        .storage-container input:focus {
+          outline: none;
+          border-color: #27ae60;
+          box-shadow: 0 0 0 3px rgba(39, 174, 96, 0.1);
+        }
+
+        .storage-container button {
+          padding: 12px 24px;
+          border: none;
+          border-radius: 8px;
+          font-size: 16px;
+          font-weight: 600;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          margin-right: 10px;
+          margin-bottom: 10px;
+        }
+
+        .btn-submit {
+          background: linear-gradient(135deg, #27ae60 0%, #229954 100%);
+          color: white;
+        }
+
+        .btn-submit:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 4px 8px rgba(39, 174, 96, 0.3);
+        }
+
+        .btn-edit {
+          background: #3498db;
+          color: white;
+          padding: 8px 16px;
+          font-size: 14px;
+        }
+
+        .btn-edit:hover {
+          background: #2980b9;
+        }
+
+        .btn-delete {
+          background: #e74c3c;
+          color: white;
+          padding: 8px 16px;
+          font-size: 14px;
+        }
+
+        .btn-delete:hover {
+          background: #c0392b;
+        }
+
+        .btn-clear {
+          background: #e67e22;
+          color: white;
+          margin-top: 20px;
+        }
+
+        .btn-clear:hover {
+          background: #d35400;
+        }
+
+        .data-list {
+          background: white;
+          padding: 30px;
+          border-radius: 12px;
+          box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .data-list h2 {
+          color: #2c3e50;
+          margin-bottom: 20px;
+          font-size: 1.5em;
+        }
+
+        .data-item {
+          background: #f9f9f9;
+          padding: 15px 20px;
+          border-radius: 8px;
+          margin-bottom: 15px;
+          border-left: 4px solid #27ae60;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          transition: all 0.3s ease;
+        }
+
+        .data-item:hover {
+          transform: translateX(5px);
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+          background: #fff;
+        }
+
+        .data-content {
+          flex: 1;
+        }
+
+        .data-content strong {
+          color: #27ae60;
+          display: block;
+          margin-bottom: 5px;
+        }
+
+        .data-content span {
+          color: #555;
+        }
+
+        .data-actions {
+          display: flex;
+          gap: 10px;
+        }
+
+        .empty-message {
+          text-align: center;
+          color: #999;
+          font-style: italic;
+          padding: 40px 20px;
+          background: #f9f9f9;
+          border-radius: 8px;
+        }
+
+        @media (max-width: 768px) {
+          .storage-container {
+            padding: 20px 15px;
+          }
+
+          .data-item {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 15px;
+          }
+
+          .data-actions {
+            width: 100%;
+            justify-content: flex-end;
+          }
+        }
+      `}</style>
+      <h1>LocalStorage Demo</h1>
+      <div className="storage-info">
+        💾 Data persists even after closing the browser. Try closing and reopening!
+      </div>
 
       <form onSubmit={submitForm}>
         <label>Name:</label>
@@ -306,35 +513,64 @@ export default function LocalStorage() {
           onChange={(e) =>
             setState({ ...state, name: e.target.value })
           }
+          placeholder="Enter your name"
         />
-
-        <br />
 
         <label>Email:</label>
         <input
-          type="text"
+          type="email"
           value={state.email}
           onChange={(e) =>
             setState({ ...state, email: e.target.value })
           }
+          placeholder="Enter your email"
         />
 
-        <br />
-
-        <button type="submit">
-          {editIndex !== null ? "Update" : "Submit"}
+        <button type="submit" className="btn-submit">
+          {editIndex !== null ? "Update" : "Add"}
         </button>
+        {editIndex !== null && (
+          <button 
+            type="button" 
+            className="btn-clear"
+            onClick={() => {
+              setEditIndex(null);
+              setState({ name: "", email: "" });
+            }}
+          >
+            Cancel
+          </button>
+        )}
       </form>
 
-      <ul>
-        {data.map((el, i) => (
-          <li key={i}>
-            {el.name} - {el.email}
-            <button onClick={() => handleEdit(i)}>Edit</button>
-            <button onClick={() => handleDelete(i)}>Delete</button>
-          </li>
-        ))}
-      </ul>
+      <div className="data-list">
+        <h2>Stored Data ({data.length} items)</h2>
+        {data.length > 0 && (
+          <button className="btn-clear" onClick={handleClearAll}>
+            Clear All Data
+          </button>
+        )}
+        {data.length === 0 ? (
+          <div className="empty-message">No data stored yet</div>
+        ) : (
+          data.map((el, i) => (
+            <div key={i} className="data-item">
+              <div className="data-content">
+                <strong>{el.name}</strong>
+                <span>{el.email}</span>
+              </div>
+              <div className="data-actions">
+                <button className="btn-edit" onClick={() => handleEdit(i)}>
+                  Edit
+                </button>
+                <button className="btn-delete" onClick={() => handleDelete(i)}>
+                  Delete
+                </button>
+              </div>
+            </div>
+          ))
+        )}
+      </div>
     </div>
   );
 }

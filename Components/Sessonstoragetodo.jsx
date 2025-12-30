@@ -1,88 +1,113 @@
 import React, { useEffect, useState } from 'react';
 
-export default function SessionStorage() {
-  const [state, setState] = useState({
-    name: "",
-    email: ""
+// Very simple example showing both localStorage and sessionStorage
+export default function SimpleStorageDemo() {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+
+  const [localUser, setLocalUser] = useState(() => {
+    const saved = localStorage.getItem("simpleLocalUser");
+    return saved ? JSON.parse(saved) : null;
   });
 
-  const [data, setData] = useState(() => {
-    const savedData = JSON.parse(sessionStorage.getItem("data"));
-    return savedData || [];
+  const [sessionUser, setSessionUser] = useState(() => {
+    const saved = sessionStorage.getItem("simpleSessionUser");
+    return saved ? JSON.parse(saved) : null;
   });
 
-  const [editIndex, setEditIndex] = useState(null);
-
-  useEffect(() => {
-    sessionStorage.setItem("data", JSON.stringify(data));
-  }, [data]);
-
-  function submitForm(e) {
-    e.preventDefault();
-
-    if (editIndex !== null) {
-      const updatedData = [...data];
-      updatedData[editIndex] = state;
-      setData(updatedData);
-      setEditIndex(null);
-    } else {
-      setData([...data, state]);
+  // Save to localStorage
+  function saveToLocal() {
+    if (!name || !email) {
+      alert("Enter name and email");
+      return;
     }
-
-    setState({ name: "", email: "" });
+    const user = { name, email };
+    localStorage.setItem("simpleLocalUser", JSON.stringify(user));
+    setLocalUser(user);
+    setName("");
+    setEmail("");
   }
 
-  function handleEdit(index) {
-    setState(data[index]);
-    setEditIndex(index);
+  // Save to sessionStorage
+  function saveToSession() {
+    if (!name || !email) {
+      alert("Enter name and email");
+      return;
+    }
+    const user = { name, email };
+    sessionStorage.setItem("simpleSessionUser", JSON.stringify(user));
+    setSessionUser(user);
+    setName("");
+    setEmail("");
   }
 
-  function handleDelete(index) {
-    const filteredData = data.filter((_, i) => i !== index);
-    setData(filteredData);
+  function clearLocal() {
+    localStorage.removeItem("simpleLocalUser");
+    setLocalUser(null);
+  }
+
+  function clearSession() {
+    sessionStorage.removeItem("simpleSessionUser");
+    setSessionUser(null);
   }
 
   return (
-    <div>
-      <h1>SessionStorage</h1>
+    <div style={{ maxWidth: 600, margin: "40px auto", padding: 20, border: "1px solid #ccc" }}>
+      <h2>LocalStorage & SessionStorage </h2>
 
-      <form onSubmit={submitForm}>
-        <label>Name:</label>
-        <input
-          type="text"
-          value={state.name}
-          onChange={(e) =>
-            setState({ ...state, name: e.target.value })
-          }
-        />
+      <div style={{ marginBottom: 20 }}>
+        <div>
+          <label>Name: </label>
+          <input
+            type="text"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
+        </div>
+        <div style={{ marginTop: 10 }}>
+          <label>Email: </label>
+          <input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+        </div>
 
-        <br />
+        <div style={{ marginTop: 15 }}>
+          <button onClick={saveToLocal}>Save to localStorage</button>
+          <button onClick={saveToSession} style={{ marginLeft: 10 }}>
+            Save to sessionStorage
+          </button>
+        </div>
+      </div>
 
-        <label>Email:</label>
-        <input
-          type="text"
-          value={state.email}
-          onChange={(e) =>
-            setState({ ...state, email: e.target.value })
-          }
-        />
+      <hr />
 
-        <br />
+      <div style={{ marginTop: 20 }}>
+        <h3>LocalStorage value</h3>
+        {localUser ? (
+          <div>
+            <p>Name: {localUser.name}</p>
+            <p>Email: {localUser.email}</p>
+            <button onClick={clearLocal}>Clear localStorage</button>
+          </div>
+        ) : (
+          <p>No data in localStorage</p>
+        )}
+      </div>
 
-        <button type="submit">
-          {editIndex !== null ? "Update" : "Submit"}
-        </button>
-      </form>
-
-      <ul>
-        {data.map((el, i) => (
-          <li key={i}>
-            {el.name} - {el.email}
-            <button onClick={() => handleEdit(i)}>Edit</button>
-            <button onClick={() => handleDelete(i)}>Delete</button>
-          </li>
-        ))}
-      </ul>
+      <div style={{ marginTop: 20 }}>
+        <h3>SessionStorage value</h3>
+        {sessionUser ? (
+          <div>
+            <p>Name: {sessionUser.name}</p>
+            <p>Email: {sessionUser.email}</p>
+            <button onClick={clearSession}>Clear sessionStorage</button>
+          </div>
+        ) : (
+          <p>No data in sessionStorage</p>
+        )}
+      </div>
     </div>
   );
 }
