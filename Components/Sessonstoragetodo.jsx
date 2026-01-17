@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
-// Very simple example showing both localStorage and sessionStorage
+
 export default function SimpleStorageDemo() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -15,7 +15,7 @@ export default function SimpleStorageDemo() {
     return saved ? JSON.parse(saved) : null;
   });
 
-  // Save to localStorage
+ 
   function saveToLocal() {
     if (!name || !email) {
       alert("Enter name and email");
@@ -28,7 +28,7 @@ export default function SimpleStorageDemo() {
     setEmail("");
   }
 
-  // Save to sessionStorage
+ 
   function saveToSession() {
     if (!name || !email) {
       alert("Enter name and email");
@@ -58,19 +58,11 @@ export default function SimpleStorageDemo() {
       <div style={{ marginBottom: 20 }}>
         <div>
           <label>Name: </label>
-          <input
-            type="text"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-          />
+          <input type="text"  value={name}  onChange={(e) => setName(e.target.value)} />
         </div>
         <div style={{ marginTop: 10 }}>
           <label>Email: </label>
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
+          <input   type="email"    value={email}    onChange={(e) => setEmail(e.target.value)} />
         </div>
 
         <div style={{ marginTop: 15 }}>

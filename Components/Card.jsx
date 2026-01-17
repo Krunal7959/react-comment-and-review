@@ -1,36 +1,28 @@
-import React, { useState, useEffect } from 'react';
+
+import React, { useState, useEffect } from "react";
 
 export default function Card() {
-
   const [state, setState] = useState(
-    "https://static.vecteezy.com/system/resources/thumbnails/040/890/255/small/ai-generated-empty-wooden-table-on-the-natural-background-for-product-display-free-photo.jpg"
+    "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBw0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ8NDQ0NFREWFhURFRUYHSggGBolGxUVITEhJSkrLi4uFx8zODMsNygtLisBCgoKDQ0NDg0NDysZFRktKy0rLS0rNys3KystKysrLS03KysrLSs3LSsrKy03LTctLS0tKy0rKysrKy0rNysrK//AABEIAMoA+gMBIgACEQEDEQH/xAAXAAEBAQEAAAAAAAAAAAAAAAAAAQIE/8QAGhABAQEAAwEAAAAAAAAAAAAAABEBcZGhIf/EABcBAQEBAQAAAAAAAAAAAAAAAAABBwb/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwDvEV2DLVAEURQFQEUAFEVEAAFQBRAFAQBBQAAEBQBQEAABWAFVVQQVUBFABRARRFQFQEUSgqiAiiAKIAAKolVAVAABBQAGFQxVVUXAURUQVAFEUAARRAFEUAQBRAAAAAUEAVAABNAqoCsKiqqiKIoigKgCiKiAAKIAogCiAKCAAAqAACKKgCggAUQEAFURQURRAwAUQBpExQAAFQBRAFEAVAAEAUQABAAABAUAFABFAoC3EAUQEUQBVZqgAAAAAAAAIAAAoIAqAAAKgCiiKgAAACKIAogCiALRFAEAUQBRAFQAAAAFUTnxRBAFEEUVRAFAEUSgKAAIAoAAAAAgCCqCAogCoAKgACAoCACKKKgIolAUAFEAUQBRKAogIogCiAqiAKIAqAAIUFQSgogKlVAFEUFEAUAAARRAFEAUQBRAFEAUQoKgAUAUEAAQAAUEAUAAAFEBFABRAFEL9gKCUFEAUQBUAFQABAABVBAFEKAICqIoCoCKIAoXsAABRARRAVaIAUAAAAQBRAAADdBBQAEVFFAwEFRcAAEA0AAAVMAURQEAAAAAAAAAEF00VAAAQH//2Q=="
   );
-
   useEffect(() => {
     console.log("mount phase");
 
-    return () => {
-      alert("unmount phase");
-    };
-  }, []);
+    return (() => {
+      alert("unmount");
+    });
+  }, [state]);  
 
   return (
     <div>
-      <h1>Card Component</h1>
-
-      <img 
-        src={state} />
-
-      <br /><br />
+      <img src={state} alt="card-img" width={200} />
 
       <button
         onClick={() =>
-          setState(
-            "https://static.vecteezy.com/system/resources/thumbnails/001/849/553/small/modern-gold-background-free-vector.jpg"
-          )
+          setState("https://www.w3schools.com/howto/img_avatar.png")
         }
       >
-        Show New Image
+        Change Image
       </button>
     </div>
   );

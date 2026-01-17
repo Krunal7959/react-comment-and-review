@@ -1,28 +1,20 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
-export default function TimerSS() {
-    const [timer, setTimer] = useState(0)
-    const id = useRef(null);
-    function start() {
-        id.current = setInterval(() => {
-            setTimer((prev) => prev + 1)
-        }, 1000);
-    }
-    function stop() {
-        clearInterval(id.current);
-    }
+export default function Timer() {
+    const [timer,setTimer]=useState(0)
 
 
+    useEffect(()=>{
+        setInterval(()=>{
+              setTimer((prev)=>prev+1)
+        },1000)
+    },[])
 
-    return (
+  return (
+    <div>
+        <h1>Timer is {timer}</h1>
+     
 
-        <div>
-
-            <h1>Timer is {timer}</h1>
-
-            <button onClick={start}>start</button>
-            <button onClick={stop}>stop</button>
-
-        </div>
-    )
+    </div>
+  )
 }
