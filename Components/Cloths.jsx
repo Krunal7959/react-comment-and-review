@@ -1,13 +1,12 @@
-import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect, useState } from 'react';
 
-export default function Electronic() {
+export default function Menscloth() {
   const [products, setProducts] = useState([]);
   const [search, setSearch] = useState("");
   const [sort, setSort] = useState("");
 
   useEffect(() => {
-    fetch("https://fakestoreapi.com/products/category/electronics")
+    fetch("https://fakestoreapi.com/products/category/men%27s%20clothing")
       .then(res => res.json())
       .then(data => setProducts(data));
   }, []);
@@ -23,15 +22,15 @@ export default function Electronic() {
 
   return (
     <div>
-      <h1>Electronics</h1>
+      <h1>Menscloth</h1>
 
-      {/* Search */}
+     
       <input
         placeholder="Search product"
         onChange={(e) => setSearch(e.target.value)}
       />
 
-      {/* Sort */}
+    
       <select onChange={(e) => setSort(e.target.value)}>
         <option value="">Sort by price</option>
         <option value="low">Low → High</option>
@@ -42,10 +41,7 @@ export default function Electronic() {
 
       {finalData.map(item => (
         <div key={item.id}>
-          <Link to={`/ProductDetails/${item.id}`}>
-            {item.title}
-          </Link>
-          <br />
+          <h3>{item.title}</h3>
           <img src={item.image} alt={item.title} width="120" />
           <p>${item.price}</p>
           <hr />
