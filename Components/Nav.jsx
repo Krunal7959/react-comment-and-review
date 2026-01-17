@@ -10,6 +10,7 @@ export default function Nav() {
             <Link to="/api">API</Link>
             <Link to="/timer">Timer</Link>
             <Link to="/Product">product</Link>
+            <link to="/Electronics">Electronics</link>
 
 
         </div>
